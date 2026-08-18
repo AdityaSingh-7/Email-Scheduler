@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://email-scheduler-azpt.onrender.com/api/:path*"
+    }
+  ]
+}
