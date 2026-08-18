@@ -1,0 +1,48 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  avatar    String?
+  createdAt DateTime @default(now())
+}
+
+model SenderAccount {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  smtpHost  String
+  smtpPort  Int
+  user      String
+  pass      String
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model ScheduledEmail {
+  id                 String    @id @default(uuid())
+  recipient          String
+  subject            String
+  body               String
+  senderEmail        String    @default("default@ethereal.email")
+  scheduledFor       DateTime
+  sentAt             DateTime?
+  status             String    @default("SCHEDULED") // SCHEDULED, PROCESSING, SENT, FAILED, RATE_LIMITED
+  delayBetween       Int       @default(2000)        // in milliseconds
+  hourlyLimit        Int       @default(200)         // max emails per hour
+  etherealPreviewUrl String?
+  errorMessage       String?
+  bullJobId          String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([status])
+  @@index([scheduledFor])
+}
