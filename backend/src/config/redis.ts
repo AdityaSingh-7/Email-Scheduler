@@ -1,32 +1,50 @@
 import Redis from 'ioredis';
 
 const redisUrl = process.env.REDIS_URL;
-let redisHost = process.env.REDIS_HOST || 'localhost';
 
-// Clean up redisHost if user passed redis:// prefix
-if (redisHost.startsWith('redis://')) {
-  redisHost = redisHost.replace('redis://', '').split(':')[0];
+function parseRedisOptions() {
+  if (redisUrl) {
+    try {
+      const parsed = new URL(redisUrl);
+      return {
+        host: parsed.hostname,
+        port: parseInt(parsed.port || '6379', 10),
+        username: parsed.username ? decodeURIComponent(parsed.username) : undefined,
+        password: parsed.password ? decodeURIComponent(parsed.password) : undefined,
+        maxRetriesPerRequest: null,
+        enableReadyCheck: false,
+        tls: redisUrl.startsWith('rediss://') ? { rejectUnauthorized: false } : undefined,
+      };
+    } catch (e) {
+      console.error('Error parsing REDIS_URL:', e);
+    }
+  }
+
+  let host = process.env.REDIS_HOST || 'localhost';
+  if (host.startsWith('redis://') || host.startsWith('rediss://')) {
+    try {
+      const parsed = new URL(host);
+      host = parsed.hostname;
+    } catch {
+      host = host.replace(/^rediss?:\/\//, '').split(':')[0];
+    }
+  }
+
+  return {
+    host: host,
+    port: parseInt(process.env.REDIS_PORT || '6379', 10),
+    password: process.env.REDIS_PASSWORD || undefined,
+    maxRetriesPerRequest: null,
+    enableReadyCheck: false,
+  };
 }
 
-const redisPort = parseInt(process.env.REDIS_PORT || '6379', 10);
-const redisPassword = process.env.REDIS_PASSWORD || undefined;
+export const redisConnectionOptions = parseRedisOptions();
 
-export const redisConnectionOptions: any = redisUrl
-  ? redisUrl
-  : {
-      host: redisHost,
-      port: redisPort,
-      password: redisPassword,
-      maxRetriesPerRequest: null, // Required by BullMQ
-      enableReadyCheck: false,
-    };
-
-export const redisClient = typeof redisConnectionOptions === 'string'
-  ? new Redis(redisConnectionOptions, { maxRetriesPerRequest: null, enableReadyCheck: false })
-  : new Redis(redisConnectionOptions);
+export const redisClient = new Redis(redisConnectionOptions as any);
 
 redisClient.on('connect', () => {
-  console.log(`✅ Redis connected to ${redisHost}:${redisPort}`);
+  console.log(`✅ Redis connected to ${redisConnectionOptions.host}:${redisConnectionOptions.port}`);
 });
 
 redisClient.on('error', (err) => {
