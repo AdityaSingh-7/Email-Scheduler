@@ -80,7 +80,7 @@ export async function recoverScheduledJobsOnStartup() {
   try {
     const pendingEmails = await prisma.scheduledEmail.findMany({
       where: {
-        status: 'SCHEDULED',
+        status: { in: ['SCHEDULED', 'PROCESSING', 'RATE_LIMITED'] },
       },
     });
 
