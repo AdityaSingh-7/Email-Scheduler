@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://email-scheduler-azpt.onrender.com/api/:path*"
+      "destination": "https://email-scheduler-production-44d1.up.railway.app/api/:path*"
     },
     {
       "source": "/:path*",
