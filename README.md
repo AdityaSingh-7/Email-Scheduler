@@ -1,7 +1,7 @@
 # ReachInbox Full-Stack Email Job Scheduler
 
 Production-grade full-stack email job scheduler service and dashboard built for the **Outbox Labs / ReachInbox Hiring Assignment**.
-
+Deployed Link- https://email-scheduler-two-theta.vercel.app/
 ---
 
 ## 🚀 Key System Features & Highlights
@@ -93,7 +93,6 @@ npm install
 npx prisma db push
 npm run dev
 ```
-*Backend will run on `http://localhost:5000` with SQLite relational database (`dev.db`).*
 
 #### 4. Setup & Start Frontend
 ```bash
@@ -101,26 +100,3 @@ cd frontend
 npm install
 npm run dev
 ```
-*Frontend will run on `http://localhost:3000`.*
-
----
-
-## 📹 Demo Video Recording Guide (Max 5 Mins)
-
-When recording your demo video for submission:
-1. **Show Login**: Open `http://localhost:3000`, click Google Login or Instant Candidate Login.
-2. **Compose Campaign**: Click "Compose New Email", paste/upload a lead CSV with 5 emails, set subject and body, and schedule.
-3. **Show Scheduled Table**: Demonstrate emails appearing in the "Scheduled Emails" table with status `Scheduled`.
-4. **Show Sent Log**: Wait a few seconds as the worker fires, navigate to "Sent Emails Log", and click the **Preview Email** button to open the Ethereal email preview.
-5. **Show Restart Scenario**:
-   - Schedule emails for 1 minute in the future.
-   - Stop the backend process (`Ctrl + C` in terminal).
-   - Start the backend process again (`npm run dev`).
-   - Observe the terminal output showing recovery scan and BullMQ worker firing the emails at the scheduled time!
-6. **(Bonus) Rate Limiting**: Set hourly limit = `2`, schedule 4 emails, and show how the worker sends 2 immediately and postpones the remaining 2 to the next hour window.
-
----
-
-## ✉️ Contact & Submission Form Details
-* **Submit To**: [ClickUp Submission Form](https://forms.clickup.com/9005062261/f/8cbwp3n-8876/6NNNJ92DV93PQTAYST)
-* **Maintainers**: Add `Mitrajit` and `Yadav036` to your private GitHub repo.
