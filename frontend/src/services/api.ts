@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { EmailRecord, DashboardStats, SchedulePayload, User } from '../types';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? 'https://email-scheduler-production-44d1.up.railway.app/api' : '/api');
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
